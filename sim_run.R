@@ -34,9 +34,14 @@ source("./sim_conditions.R")
 
 
 
-# for test: 
-sim_condition = simulation_conditions[which(simulation_conditions$id==11),] # 11
+# # for test: 
+# sim_condition = simulation_conditions[which(simulation_conditions$id==11),] # 9, 10
+# family =  "binomial" # "gaussian" # 
 
+
+# important:
+# <simpleError: number of observations (=n_cluster * n_obs_per_cluster) <= number of random effects (= n_ttl_effect * n_cluster) for term (rdm1 + rdm2 + rdm3 + rdm4 + 1 | c); 
+# the random-effects parameters and the residual variance (or scale parameter) are probably unidentifiable>
 
 run_wrapper <- function(sim_condition, family) {
   results_list = list()
@@ -53,47 +58,62 @@ run_wrapper <- function(sim_condition, family) {
                            family = family)
       
       # glme mixed effect model
-      tic()
-      m0 <- fit_eval_glmer(y = res$y,
-                           c = res$c,
-                           data = res$data,
-                           family = family)
-      t <- toc(log = TRUE)
-      t0 <- as.numeric( t$toc - t$tic )
+      m0 <- NULL
+      tryCatch({
+        tic()
+        m0 <- fit_eval_glmer(y = res$y,
+                             c = res$c,
+                             data = res$data,
+                             family = family)
+        t <- toc(log = TRUE)
+        t0 <- as.numeric( t$toc - t$tic )
+      },error=function(e){
+        print(e)
+      })
       
       
       # glm model 
-      tic()
-      m1 <- fit_eval_glm(y = res$y,
-                         c = res$c,
-                         data = res$data,
-                         family = family)
-      t <- toc(log = TRUE)
-      t1 <- as.numeric( t$toc - t$tic )
+      m1 <- NULL
+      tryCatch({
+        tic()
+        m1 <- fit_eval_glm(y = res$y,
+                           c = res$c,
+                           data = res$data,
+                           family = family)
+        t <- toc(log = TRUE)
+        t1 <- as.numeric( t$toc - t$tic )
+      },error=function(e){
+        print(e)
+      })
       
       # gee model
-      tic()
-      m2 <- fit_eval_gee(y = res$y,
-                         c = res$c,
-                         data = res$data,
-                         family = family)
-      t <- toc(log = TRUE)
-      t2 <- as.numeric( t$toc - t$tic )
-      
+      m2 <- NULL
+      tryCatch({
+        tic()
+        m2 <- fit_eval_gee(y = res$y,
+                           c = res$c,
+                           data = res$data,
+                           family = family)
+        t <- toc(log = TRUE)
+        t2 <- as.numeric( t$toc - t$tic )
+        
+      },error=function(e){
+        print(e)
+      })
       
       
       results_list[[i]] = list(id = sim_condition$id, 
                                iter = i, 
                                N = nrow(res$data),
-                               t0 = t0,
-                               t1 = t1,
-                               t2 = t2,
-                               loopred0 = m0$loopred,
-                               loopred1 = m1$loopred,
-                               loopred2 = m2$loopred,
-                               loodev0 = m0$looDeviance,
-                               loodev1 = m1$looDeviance,
-                               loodev2 = m2$looDeviance)
+                               t0 = ifelse(is.null(m0),-1,t0),
+                               t1 = ifelse(is.null(m1),-1,t1),
+                               t2 = ifelse(is.null(m2),-1,t2),
+                               loopred0 = ifelse(is.null(m0),-1,m0$loopred),
+                               loopred1 = ifelse(is.null(m1),-1,m1$loopred),
+                               loopred2 = ifelse(is.null(m2),-1,m2$loopred),
+                               loodev0 = ifelse(is.null(m0),-1,m0$looDeviance),
+                               loodev1 = ifelse(is.null(m1),-1,m1$looDeviance),
+                               loodev2 = ifelse(is.null(m2),-1,m2$looDeviance), )
       
     }, error = function(e){
       print(e)

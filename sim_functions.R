@@ -183,7 +183,7 @@ fit_eval_glmer <- function(y, c, data, family=c("binomial","gaussian")[1], skipl
   fml <- formula(paste0("y~", paste0(c(fix_vars, rdm_vars),collapse = "+"), "+", paste0("(",paste0(rdm_vars,collapse = "+"),"+1|c)")))
   
   if(family == "binomial"){
-    mdl <- glmer(fml,  data = df_mdl, family = binomial, REML=F)
+    mdl <- glmer(fml,  data = df_mdl, family = binomial)
   }else if(family == "gaussian"){
     mdl <- lmer(fml, data = df_mdl, REML=F)
   }
@@ -244,6 +244,16 @@ fit_eval_glm <- function(y, c, data, family=c("binomial","gaussian")[1]){
   mdl <- glm(fml, data = df_mdl, family = family)
   mdl$c <- c
   
+  # calculate sigma only based on fixed effects
+  yfit <- predict(mdl, newdata = df_mdl, type = "response")
+  RSS <- sum((y-yfit)^2)
+  n <- nrow(data)
+  # Get the number of fixed effect parameters (p)
+  p <- length(coef(mdl))
+  s <- sqrt(RSS / (n - p))
+  
+  
+  
   # loo auc and loo deviance
   y_pred <- c()
   y_true <- c()
@@ -260,7 +270,7 @@ fit_eval_glm <- function(y, c, data, family=c("binomial","gaussian")[1]){
   }
   if(family=="gaussian"){
     loopred <- sqrt(sum( (y_true-y_pred)^2 )) # MSE
-    s <- sigma(mdl)
+    # s <- sigma(mdl)
     looDeviance <- length(y_true)*log(2*pi*s^2) + 1/s^2*sum( (y_true-y_pred)^2 )  
   }
   
@@ -289,10 +299,19 @@ fit_eval_gee <- function(y, c, data, family=c("binomial","gaussian")[1], skiploo
   fml <- formula(paste0("y ~ ", paste0(c(fix_vars, rdm_vars), collapse = " + ")))
   
   if (family == "binomial") {
-    mdl <- geeglm(fml, data = df_mdl, family = binomial, id = c)
+    mdl <- geeglm(fml, data = df_mdl, family = binomial, id = c, corstr = "ar1")
   } else if (family == "gaussian") {
-    mdl <- geeglm(fml, data = df_mdl, family = gaussian, id = c)
+    mdl <- geeglm(fml, data = df_mdl, family = gaussian, id = c, corstr = "ar1")
   }
+  
+  # calculate sigma only based on fixed effects
+  yfit <- predict(mdl, newdata = df_mdl, type = "response")
+  RSS <- sum((y-yfit)^2)
+  n <- nrow(data)
+  # Get the number of fixed effect parameters (p)
+  p <- length(coef(mdl))
+  s <- sqrt(RSS / (n - p))
+  
   
   loopred <- NA
   looDeviance <- NA
@@ -303,9 +322,9 @@ fit_eval_gee <- function(y, c, data, family=c("binomial","gaussian")[1], skiploo
     for (f_sub in unique(df_mdl$c)) {
       print(f_sub)
       if (family == "binomial") {
-        mdl_sub <- geeglm(fml, data = df_mdl[!df_mdl$c == f_sub, ], family = binomial, id = c)
+        mdl_sub <- geeglm(fml, data = df_mdl[!df_mdl$c == f_sub, ], family = binomial, id = c, corstr = "ar1")
       } else if (family == "gaussian") {
-        mdl_sub <- geeglm(fml, data = df_mdl[!df_mdl$c == f_sub, ], family = gaussian, id = c)
+        mdl_sub <- geeglm(fml, data = df_mdl[!df_mdl$c == f_sub, ], family = gaussian, id = c, corstr = "ar1")
       }
       y_pred_sub <- predict(mdl_sub, newdata = df_mdl[df_mdl$c == f_sub, ], type = "response")
       y_true_sub <- df_mdl[df_mdl$c == f_sub, "y"]
@@ -318,7 +337,7 @@ fit_eval_gee <- function(y, c, data, family=c("binomial","gaussian")[1], skiploo
     }
     if (family == "gaussian") {
       loopred <- sqrt(sum((y_true - y_pred)^2)) # MSE
-      s <- sqrt(summary(mdl)$dispersion$Estimate)
+      # s <- sqrt(summary(mdl)$dispersion$Estimate)
       looDeviance <- length(y_true) * log(2 * pi * s^2) + 1/s^2 * sum((y_true - y_pred)^2)
     }
   }
