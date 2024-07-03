@@ -1,7 +1,7 @@
 
 # Parameters
 n_cluster <- rev(c(10, 50)) # number of clusters
-n_obs_per_cluster <- rev(c(2, 5, 10, 25, 50, 150)) # number of observations per cluster
+n_obs_per_cluster <- rev(c(5, 10, 25, 50, 150)) # number of observations per cluster
 n_ttl_betas <- seq(5, 10) # number of total effects
 fix_rdm_ratio <- c(0.2) # c(0.2, 0.5, 0.8) # proportion of fix effects
 sigma_fix <- c(5) # fix effect beta variance # 5
@@ -23,6 +23,7 @@ simulation_conditions <- as.data.frame(param_grid)
 simulation_conditions$id <- seq(1:nrow(param_grid))
 simulation_conditions$iter <- 100
 
-
+# for testing slurm
+simulation_conditions <- simulation_conditions[1:10,]
 
 

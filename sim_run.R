@@ -34,9 +34,9 @@ source("./sim_conditions.R")
 
 
 
-# # for test: 
-# sim_condition = simulation_conditions[which(simulation_conditions$id==11),] # 9, 10
-# family =  "binomial" # "gaussian" # 
+# # # for test: 
+# sim_condition = simulation_conditions[which(simulation_conditions$id==6),] # 9, 10
+# family =  "binomial" # "gaussian" #
 
 
 # important:
@@ -46,7 +46,6 @@ source("./sim_conditions.R")
 run_wrapper <- function(sim_condition, family) {
   results_list = list()
   for(i in 1:sim_condition$iter){
-    tryCatch({
       res <- generate_data(sim_condition$n_cluster,
                            sim_condition$n_obs_per_cluster,
                            sim_condition$n_ttl_betas, 
@@ -113,12 +112,9 @@ run_wrapper <- function(sim_condition, family) {
                                loopred2 = ifelse(is.null(m2),-1,m2$loopred),
                                loodev0 = ifelse(is.null(m0),-1,m0$looDeviance),
                                loodev1 = ifelse(is.null(m1),-1,m1$looDeviance),
-                               loodev2 = ifelse(is.null(m2),-1,m2$looDeviance), )
+                               loodev2 = ifelse(is.null(m2),-1,m2$looDeviance) )
       
-    }, error = function(e){
-      print(e)
-      print(paste0("skip iteration ",i))
-    })
+      
   }
   results_list <- Filter(function(x) !is.null(x), results_list)
   toReturn = do.call("rbind", results_list)
@@ -129,8 +125,5 @@ run_wrapper <- function(sim_condition, family) {
 
 run_wrapper_lm <- function(sim_condition) run_wrapper(sim_condition, family="gaussian")
 run_wrapper_lr <- function(sim_condition) run_wrapper(sim_condition, family="binomial")
-
-
-
 
 
