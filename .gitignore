@@ -1,0 +1,10 @@
+# Ignore a specific file
+.Rhistory
+.DS_Store
+
+# Ignore all files in a directory
+res/*
+
+# Ignore all files with a specific extension
+*.RData
+*.RDS
