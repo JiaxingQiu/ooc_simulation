@@ -4,7 +4,8 @@ sjob_lr = slurm_map(
   split(simulation_conditions, simulation_conditions$id),
   run_wrapper_lr,
   nodes=nrow(simulation_conditions),
-  cpus_per_node = 1,
+  cpus_per_node = 4,
+  jobname = "ooc_run_lr",
   submit = TRUE,
   preschedule_cores = F,
   slurm_options =
