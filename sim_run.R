@@ -38,7 +38,6 @@ source("./sim_conditions.R")
 # sim_condition = simulation_conditions[which(simulation_conditions$id==6),] # 9, 10
 # family =  "binomial" # "gaussian" #
 
-
 # important:
 # <simpleError: number of observations (=n_cluster * n_obs_per_cluster) <= number of random effects (= n_ttl_effect * n_cluster) for term (rdm1 + rdm2 + rdm3 + rdm4 + 1 | c); 
 # the random-effects parameters and the residual variance (or scale parameter) are probably unidentifiable>

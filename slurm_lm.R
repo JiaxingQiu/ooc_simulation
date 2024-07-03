@@ -9,7 +9,7 @@ sjob_lm = slurm_map(
   submit = TRUE,
   preschedule_cores = F,
   slurm_options =
-    c(account = "netlab", partition = "standard", time = "2-00:00:00"), # standard
+    c(account = "netlab", partition = "standard", time = "5-00:00:00"), 
   global_objects = lsf.str()
 )
 save(sjob_lm, file = "ooc_run_lm.Rdata")
