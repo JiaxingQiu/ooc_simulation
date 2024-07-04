@@ -1,4 +1,6 @@
 source("./sim_run.R")
+source("./sim_conditions.R")
+
 
 sjob_lm = slurm_map(
   split(simulation_conditions, simulation_conditions$id),
