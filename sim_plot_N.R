@@ -38,7 +38,7 @@ for(rn in c("lm","lr")){
     plot_df$model_type <- factor(plot_df$model_type, levels=c("GLM", "GEE","RE"))
     ylab <- NULL
     if(st=="t") ylab <- "Time (sec)"
-    if(st=="loopred" & rn=="lr") ylab <- "looAUROC"
+    if(st=="loopred" & rn=="lr") ylab <- "looAUC"
     if(st=="loopred" & rn=="lm") ylab <- "looMSE"
     if(st=="loodev") ylab <- "looDeviance /obs"
     
