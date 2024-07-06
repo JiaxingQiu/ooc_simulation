@@ -72,6 +72,6 @@ source("./sim_plot_special.R")
 p_s <- p
 p_s <- annotate_figure(p_s, top = text_grob("Prediction performance & Computational efficiency (special scenarios)", size = 14, face = "bold"))
 
-p_s %>% ggsave(filename=paste0("./res/ooc_performance_special.png"), width = 16, height = 8, bg="white")
+p_s %>% ggsave(filename=paste0("./res/ooc_performance_special.png"), width = 12, height = 6, bg="white")
 
 

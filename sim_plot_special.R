@@ -65,10 +65,10 @@ for(rn in c("lm","lr")){
         }
       }
       # fix ylim
-      if(st=="nc_rate") ylim <- c(0,0.3)
+      if(st=="nc_rate") ylim <- c(0,0.5)
       if(st=="t"){
         if(rn=="lm") ylim <- c(0,110)
-        if(rn=="lr") ylim <- c(0,1000)
+        if(rn=="lr") ylim <- c(0,3000)
       } 
       if(st=="loopred" & rn=="lr") {
         ylim <- c(0.4,1)
@@ -148,8 +148,9 @@ for(rn in c("lm","lr")){
                                    bottom = text_grob("Model size", size = 10, face = "bold"))
     
   }
-  p <- ggarrange(plotlist = pp_ls, nrow=1, ncol=4, widths=c(1.1,1,1,1), 
-                 legend.grob = get_legend(plot_ls[["t"]]), legend = "right")
+  
+  if(rn=="lm") pp_ls <- pp_ls[1:3]
+  p <- ggarrange(plotlist = pp_ls, nrow=1, widths=c(1.1,1,1,1), legend.grob = get_legend(plot_ls[["t"]]), legend = "right")
   p_ls[[rn]] <- annotate_figure(p,top=text_grob(ifelse(rn=="lm", "Gaussian", "Binomial"), size = 13, face = "bold")) # , x=0, hjust=0
   
   
@@ -158,7 +159,7 @@ for(rn in c("lm","lr")){
 
 library(patchwork)
 p <- p_ls[[1]] + p_ls[[2]] + 
-  plot_layout(ncol = 2, guides = "collect") & 
+  plot_layout(ncol = 2, widths = c(0.8,1), guides = "collect") & 
   theme(plot.margin = unit(c(.2, .2, .2, .2), "cm")) #(top, right, bottom, left)
 library(cowplot)
 p <- ggdraw(p) 
