@@ -18,7 +18,7 @@ rest_id <- c(4, 7, 13, 16, 22, 25, 31, 34, 35, 40, 43, 49, 52, 58, 61, 62, 67, 7
 output <- readRDS("./res/output_ooc_run_lr_special.RDS")
 source("./sim_conditions_special.R")
 setdiff(unique(simulation_conditions$id),unique(output$id))
-rest_id <- c(2,3,12)
+rest_id <- c(3)
 
 
 

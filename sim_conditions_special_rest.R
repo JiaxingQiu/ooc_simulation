@@ -39,10 +39,10 @@ rm(simulation_conditions0, simulation_conditions1, simulation_conditions2, simul
 
 
 simulation_conditions$id <- seq(1:nrow(simulation_conditions))
-simulation_conditions$iter <- 100
+simulation_conditions$iter <- 50
 
 
-rest_id <- c(2,3,12)
+rest_id <- c(3)
 simulation_conditions <- simulation_conditions[which(simulation_conditions$id %in% rest_id),]
 
 
