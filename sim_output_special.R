@@ -18,6 +18,24 @@ for(rn in c("lr", "lm")){
   simulation_conditions <- simulation_conditions[,setdiff(colnames(simulation_conditions),"iter")]
   res_df <- as.data.frame(merge(output, simulation_conditions, by="id", all.x=T))
   res_df[res_df<0] <- NA 
+  # add rest of condition 
+  if(rn == "lr"){
+    source("./sim_conditions.R")
+    rest_cond <- simulation_conditions %>% filter(n_cluster==50,
+                                                  sigma_rdm_fix_ratio == 10,
+                                                  ar1_phi == 0.6,
+                                                  n_obs_per_cluster == 25 )
+    output <- readRDS("./res/output_ooc_run_lr.RDS")
+    output <- output %>% filter(id %in% unique(rest_cond$id))
+    rest_cond <- rest_cond[,setdiff(colnames(rest_cond),"iter")]
+    res_df2 <- as.data.frame(merge(output, rest_cond, by="id", all.x=T))
+    res_df2[res_df2<0] <- NA 
+    res_df2$id <- 3
+    res_df <- bind_rows(res_df, res_df2)
+    source("./sim_conditions_special.R")
+    simulation_conditions <- simulation_conditions[,setdiff(colnames(simulation_conditions),"iter")]
+  }
+  
   
   # deal with AUC < 0.5 for lr
   if(rn == "lr"){

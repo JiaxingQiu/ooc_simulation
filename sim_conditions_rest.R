@@ -25,10 +25,10 @@ simulation_conditions <- as.data.frame(param_grid)
 # # sanity check
 # table(simulation_conditions[,c("sigma_rdm_fix_ratio", "ar1_phi")])
 simulation_conditions$id <- seq(1:nrow(simulation_conditions))
-simulation_conditions$iter <- 100
+simulation_conditions$iter <- 50#100
 
 
-rest_id <- c(4, 7, 13, 16, 22, 25, 31, 34, 35, 40, 43, 49, 52, 58, 61, 62, 67, 70, 71, 76, 77, 79, 80)
+rest_id <- c(4, 7, 13, 16, 22, 25, 31, 34, 40, 43, 52, 58, 61, 67, 70, 76, 79)
 simulation_conditions <- simulation_conditions[which(simulation_conditions$id %in% rest_id),]
 
 # special scenario can be analyzed under fewer clustering conditions

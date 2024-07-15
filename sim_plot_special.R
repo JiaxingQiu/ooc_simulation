@@ -68,7 +68,7 @@ for(rn in c("lm","lr")){
       if(st=="nc_rate") ylim <- c(0,0.7)
       if(st=="t"){
         if(rn=="lm") ylim <- c(0,110)
-        if(rn=="lr") ylim <- c(0,3300)
+        if(rn=="lr") ylim <- c(0,4500)
       } 
       if(st=="loopred" & rn=="lr") {
         ylim <- c(0.4,1)

@@ -12,7 +12,9 @@ library(ggpubr)
 output <- readRDS("./res/output_ooc_run_lr.RDS")
 source("./sim_conditions.R")
 setdiff(unique(simulation_conditions$id),unique(output$id))
-rest_id <- c(4, 7, 13, 16, 22, 25, 31, 34, 35, 40, 43, 49, 52, 58, 61, 62, 67, 70, 71, 76, 77, 79, 80)
+
+rest_id <- c(4, 7, 13, 16, 22, 25, 31, 34, 40, 43, 52, 58, 61, 67, 70, 76, 79)
+
 
 # special lr
 output <- readRDS("./res/output_ooc_run_lr_special.RDS")
